@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
     int InputFd, OutputFd, OpenFlags;
     mode_t filePerms; //file para
     int numRead;
-    char buf[BUF_SIZE];
+    char buf[BUF_SIZE]; //save data buffer
 	char buffer[20];
 	int curr=0;
 
