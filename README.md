@@ -1,2 +1,2 @@
 # Test
-use open/write/read to realize copy(0)
+In this function we can use general I/O(eg:open/write/read) to realize copy(0).
