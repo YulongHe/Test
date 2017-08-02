@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
 {
     int InputFd, OutputFd, OpenFlags;
     mode_t filePerms; //file para
-    int numRead;
+    int numRead, flags=0;
     char buf[BUF_SIZE]; //save data buffer
 	char buffer[20];
 	int curr=0;
@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
         printf("opening file %s error!\n", argv[1]);
     printf("InputFd is %d\n", InputFd);
    
-    OpenFlags = O_CREAT | O_WRONLY | O_TRUNC;//if file not exiting so creat,otherwise clear it
+    OpenFlags = O_CREAT | O_WRONLY | O_TRUNC;//if file not exiting so creat,otherwise clear it.file is write only
     filePerms = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP |
                    S_IROTH | S_IWOTH; /* RW-RW-RW--*/
     OutputFd = open(argv[2], OpenFlags, filePerms); //creat a new file
@@ -63,13 +63,24 @@ int main(int argc, char *argv[])
         printf("close output error\n");
         
 	InputFd = open("new_1.c", O_WRONLY|O_CREAT| O_APPEND, \
-			S_IRUSR, S_IWUSR);
+			S_IRUSR, S_IWUSR); // append a file new_1.c
 
 	write(InputFd, "test", 5);
     //exit(0);        	  
 	curr=lseek(InputFd, 2, SEEK_END);
 	printf("curr is %d\n", curr);
 	
+	flags = fcntl(InputFd, F_GETFL);
+	if(flags == -1)
+	{
+		printf("fcntl get InputFd error!\n");
+	}
+	printf("InputFd flags is %d\n", flags);
+	flags |= O_APPEND;
+	if(fcntl(InputFd, F_SETFL, flags) == -1)
+		printf("set InputFd flags error!\n");
+	printf("after set InputFd flags now is %d\n", flags);
+
 	if(close(InputFd) == -1)
 		printf("close new_1.c error\n");
 }	
